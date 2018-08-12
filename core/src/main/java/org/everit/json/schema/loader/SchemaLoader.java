@@ -41,6 +41,8 @@ public class SchemaLoader {
         return new JSONObject(value.toMap());
     }
 
+    public static boolean removeAdditionalProperties;
+
     /**
      * Builder class for {@link SchemaLoader}.
      */
@@ -66,10 +68,23 @@ public class SchemaLoader {
 
         private boolean nullableSupport = false;
 
+        private boolean removeAdditionalProperties = false;
+
         RegexpFactory regexpFactory = new JavaUtilRegexpFactory();
 
         public SchemaLoaderBuilder() {
             setSpecVersion(DRAFT_4);
+        }
+
+        /**
+         * Change object that is being validated by removing all invalid, additional properties
+         *
+         * @param removeAdditionalProperties
+         * @return {@code this}
+         */
+        public SchemaLoaderBuilder removeAdditional(boolean removeAdditionalProperties) {
+            this.removeAdditionalProperties = removeAdditionalProperties;
+            return this;
         }
 
         /**
@@ -94,7 +109,7 @@ public class SchemaLoader {
          */
         @Deprecated
         public SchemaLoaderBuilder addFormatValidator(String formatName,
-                final FormatValidator formatValidator) {
+                                                      final FormatValidator formatValidator) {
             if (!Objects.equals(formatName, formatValidator.formatName())) {
                 formatValidators.put(formatName, new WrappingFormatValidator(formatName, formatValidator));
             } else {
@@ -290,6 +305,7 @@ public class SchemaLoader {
                 builder.schemaJson,
                 builder.id,
                 builder.pointerToCurrentObj);
+        removeAdditionalProperties = builder.removeAdditionalProperties;
     }
 
     private static Optional<String> extractSchemaKeywordValue(Object effectiveRootSchemaJson) {
@@ -411,4 +427,7 @@ public class SchemaLoader {
         return Optional.ofNullable(config.formatValidators.get(formatName));
     }
 
+    public boolean removeAdditionalProperties() {
+        return removeAdditionalProperties;
+    }
 }

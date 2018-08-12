@@ -43,6 +43,8 @@ public class ObjectSchema extends Schema {
 
         private boolean additionalProperties = true;
 
+        private boolean removeAdditionalProperties;
+
         private Schema schemaOfAdditionalProperties;
 
         private final List<String> requiredProperties = new ArrayList<String>(0);
@@ -57,8 +59,9 @@ public class ObjectSchema extends Schema {
 
         private Schema propertyNameSchema;
 
-        public Builder additionalProperties(boolean additionalProperties) {
+        public Builder additionalProperties(boolean additionalProperties, boolean removeAdditionalProperties) {
             this.additionalProperties = additionalProperties;
+            this.removeAdditionalProperties = removeAdditionalProperties;
             return this;
         }
 
@@ -171,6 +174,8 @@ public class ObjectSchema extends Schema {
 
     private final boolean additionalProperties;
 
+    private final boolean removeAdditionalProperties;
+
     private final Schema schemaOfAdditionalProperties;
 
     private final Schema propertyNameSchema;
@@ -200,6 +205,7 @@ public class ObjectSchema extends Schema {
         this.propertySchemas = builder.propertySchemas == null ? null
                 : Collections.unmodifiableMap(builder.propertySchemas);
         this.additionalProperties = builder.additionalProperties;
+        this.removeAdditionalProperties = builder.removeAdditionalProperties;
         this.schemaOfAdditionalProperties = builder.schemaOfAdditionalProperties;
         if (!additionalProperties && schemaOfAdditionalProperties != null) {
             throw new SchemaException(
@@ -268,6 +274,10 @@ public class ObjectSchema extends Schema {
 
     public boolean permitsAdditionalProperties() {
         return additionalProperties;
+    }
+
+    public boolean removeAdditionalProperties() {
+        return removeAdditionalProperties;
     }
 
     public boolean requiresObject() {

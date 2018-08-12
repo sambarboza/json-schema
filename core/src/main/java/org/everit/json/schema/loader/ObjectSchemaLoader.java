@@ -31,7 +31,7 @@ class ObjectSchemaLoader {
         ls.schemaJson().maybe("properties").map(JsonValue::requireObject)
                 .ifPresent(propertyDefs -> populatePropertySchemas(propertyDefs, builder));
         ls.schemaJson().maybe("additionalProperties").ifPresent(rawAddProps -> {
-            rawAddProps.canBe(Boolean.class, p -> builder.additionalProperties(p))
+            rawAddProps.canBe(Boolean.class, p -> builder.additionalProperties(p, defaultLoader.removeAdditionalProperties()))
                     .or(JsonObject.class, def -> builder.schemaOfAdditionalProperties(defaultLoader.loadChild(def).build()))
                     .requireAny();
         });
@@ -57,7 +57,7 @@ class ObjectSchemaLoader {
     }
 
     private void populatePropertySchemas(JsonObject propertyDefs,
-            ObjectSchema.Builder builder) {
+                                         ObjectSchema.Builder builder) {
         propertyDefs.forEach((key, value) -> {
             if (!key.equals(ls.specVersion().idKeyword())
                     || value instanceof JsonObject) {

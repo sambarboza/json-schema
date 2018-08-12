@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.everit.json.schema.loader.SchemaLoader;
 import org.everit.json.schema.regexp.Regexp;
 import org.json.JSONObject;
 
@@ -79,14 +80,20 @@ class ObjectSchemaValidatingVisitor extends Visitor {
         }
     }
 
-    @Override void visitAdditionalProperties(boolean permitsAdditionalProperties) {
+    @Override void visitAdditionalProperties(boolean permitsAdditionalProperties, boolean removeAdditionalProperties) {
         if (!permitsAdditionalProperties) {
             List<String> additionalProperties = getAdditionalProperties();
             if (null == additionalProperties || additionalProperties.isEmpty()) {
                 return;
             }
             for (String additionalProperty : additionalProperties) {
-                owner.failure(format("extraneous key [%s] is not permitted", additionalProperty), "additionalProperties");
+                if (SchemaLoader.removeAdditionalProperties) {
+                    if (owner.subject instanceof JSONObject) {
+                        ((JSONObject) owner.subject).remove(additionalProperty);
+                    }
+                } else {
+                    owner.failure(format("extraneous key [%s] is not permitted", additionalProperty), "additionalProperties");
+                }
             }
         }
     }

@@ -104,7 +104,7 @@ public class ObjectSchemaTest {
 
     @Test
     public void multipleAdditionalProperties() {
-        ObjectSchema subject = buildWithLocation(ObjectSchema.builder().additionalProperties(false));
+        ObjectSchema subject = buildWithLocation(ObjectSchema.builder().additionalProperties(false, false));
         try {
             subject.validate(new JSONObject("{\"a\":true,\"b\":true}"));
             fail("did not throw exception for multiple additional properties");
@@ -234,7 +234,7 @@ public class ObjectSchemaTest {
 
     @Test
     public void noAdditionalProperties() {
-        ObjectSchema subject = ObjectSchema.builder().additionalProperties(false).build();
+        ObjectSchema subject = ObjectSchema.builder().additionalProperties(false, false).build();
         TestSupport.expectFailure(subject, "#", OBJECTS.get("propertySchemaViolation"));
     }
 
@@ -287,7 +287,7 @@ public class ObjectSchemaTest {
     public void patternPropsOverrideAdditionalProps() {
         ObjectSchema.builder()
                 .patternProperty("^v.*", EmptySchema.INSTANCE)
-                .additionalProperties(false)
+                .additionalProperties(false, false)
                 .build().validate(OBJECTS.get("patternPropsOverrideAdditionalProps"));
     }
 
@@ -350,7 +350,7 @@ public class ObjectSchemaTest {
 
     @Test(expected = SchemaException.class)
     public void schemaForNoAdditionalProperties() {
-        ObjectSchema.builder().additionalProperties(false)
+        ObjectSchema.builder().additionalProperties(false, false)
                 .schemaOfAdditionalProperties(BooleanSchema.INSTANCE).build();
     }
 

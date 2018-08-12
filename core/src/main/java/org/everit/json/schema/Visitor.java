@@ -117,7 +117,7 @@ abstract class Visitor {
         for (Map.Entry<String, Set<String>> entry : objectSchema.getPropertyDependencies().entrySet()) {
             visitPropertyDependencies(entry.getKey(), entry.getValue());
         }
-        visitAdditionalProperties(objectSchema.permitsAdditionalProperties());
+        visitAdditionalProperties(objectSchema.permitsAdditionalProperties(), objectSchema.removeAdditionalProperties());
         visitSchemaOfAdditionalProperties(objectSchema.getSchemaOfAdditionalProperties());
         for (Map.Entry<Regexp, Schema> entry : objectSchema.getRegexpPatternProperties().entrySet()) {
             visitPatternPropertySchema(entry.getKey(), entry.getValue());
@@ -145,7 +145,7 @@ abstract class Visitor {
     void visitSchemaOfAdditionalProperties(Schema schemaOfAdditionalProperties) {
     }
 
-    void visitAdditionalProperties(boolean additionalProperties) {
+    void visitAdditionalProperties(boolean additionalProperties, boolean removeAdditionalProperties) {
     }
 
     void visitPropertyDependencies(String ifPresent, Set<String> allMustBePresent) {
