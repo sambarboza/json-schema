@@ -7,10 +7,10 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.everit.json.schema.loader.SchemaLoader;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
+import org.jsonorg.JSONArray;
+import org.jsonorg.JSONException;
+import org.jsonorg.JSONObject;
+import org.jsonorg.JSONTokener;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 
